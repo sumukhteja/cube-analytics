@@ -1,0 +1,56 @@
+services:
+  postgres:
+    image: postgres:15
+    container_name: postgres-analytics
+    environment:
+      POSTGRES_DB: analyticsdb
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./postgres-complete-schema.sql:/docker-entrypoint-initdb.d/init.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    networks:
+      - analytics_network
+
+  cube:
+    image: cubejs/cube:latest
+    container_name: cube-analytics
+    environment:
+      CUBEJS_DEV_MODE: true
+      CUBEJS_DB_TYPE: postgres
+      CUBEJS_DB_HOST: postgres-analytics
+      CUBEJS_DB_NAME: analyticsdb
+      CUBEJS_DB_USER: postgres
+      CUBEJS_DB_PASS: postgres
+      CUBEJS_DB_PORT: 5432
+      CUBEJS_API_SECRET: d621c128b8608b38ca344d2720d16e2e745f6cae2592d1ab956506cb348e317d
+      CUBEJS_WEB_SOCKETS: true
+      # Marketing schema configuration
+      CUBEJS_DATASOURCES: default,marketing
+      CUBEJS_DS_MARKETING_DB_TYPE: postgres
+      CUBEJS_DS_MARKETING_DB_HOST: postgres-analytics
+      CUBEJS_DS_MARKETING_DB_NAME: analyticsdb
+      CUBEJS_DS_MARKETING_DB_USER: postgres
+      CUBEJS_DS_MARKETING_DB_PASS: postgres
+      CUBEJS_DS_MARKETING_DB_PORT: 5432
+      CUBEJS_DS_MARKETING_DB_SCHEMA: marketing
+    ports:
+      - "4000:4000"
+    volumes:
+      - ./cube:/cube/conf
+      - ./cube/schema:/cube/conf/model
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - analytics_network
+
+networks:
+  analytics_network:
+    driver: bridge

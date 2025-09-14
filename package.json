@@ -1,0 +1,40 @@
+{
+  "name": "analytics-semantic-layer-backend",
+  "version": "1.0.0",
+  "description": "Production-ready semantic layer backend built with Cube.js and PostgreSQL for secure business intelligence",
+  "main": "cube/cube.js",
+  "scripts": {
+    "dev": "docker-compose up -d",
+    "start": "docker-compose up -d",
+    "stop": "docker-compose down",
+    "logs": "docker-compose logs -f",
+    "restart": "docker-compose restart",
+    "clean": "docker-compose down -v",
+    "db:seed": "docker exec postgres-analytics psql -U postgres -d analyticsdb -f /docker-entrypoint-initdb.d/postgres-complete-schema.sql",
+    "health": "curl http://localhost:4000/readyz"
+  },
+  "keywords": [
+    "cube.js",
+    "postgresql",
+    "semantic-layer",
+    "business-intelligence",
+    "powerbi",
+    "analytics",
+    "api"
+  ],
+  "author": "Your Name",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/your-username/analytics-semantic-layer-backend"
+  },
+  "dependencies": {
+    "axios": "^1.12.2",
+    "cors": "^2.8.5",
+    "express": "^5.1.0"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=8.0.0"
+  }
+}
