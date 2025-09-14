@@ -30,8 +30,8 @@ Frontend App ◄──► Cube.js API ◄──► PostgreSQL
 
 ### 1. Clone & Start
 ```bash
-git clone https://github.com/your-username/analytics-semantic-layer-backend.git
-cd analytics-semantic-layer-backend
+git clone https://github.com/sumukhteja/cube-analytics.git
+cd cube-analytics
 npm run start
 ```
 
@@ -46,22 +46,29 @@ curl -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..." \
      "http://localhost:4000/cubejs-api/v1/load?query={\"measures\":[\"Sales.totalRevenue\"]}"
 ```
 
-## 📁 Project Structure
+## 📁 Project Structure (Backend Only)
 
 ```
-my-cube-app/
-├── postgres-complete-schema.sql    # With sample data
-├── postgres-schema-only.sql        # Production empty tables
+cube-analytics/
+├── README.md                       # This documentation  
+├── package.json                    # Backend scripts & metadata
+├── .gitignore                      # Git ignore rules
 ├── docker-compose.yml              # PostgreSQL + Cube.js setup
+├── postgres-complete-schema.sql    # Database with sample data
+├── postgres-schema-only.sql        # Production empty tables
 ├── cube/
-│   ├── cube.js                     # DB connection
-│   └── schema/                     # Business logic
-│       ├── joins.js                # Centralized join definitions
-│       ├── Sales.js                # Sales metrics (fact table)
-│       ├── Marketing.js            # Marketing analytics (dimension)
+│   ├── cube.js                     # Database connection config
+│   └── schema/                     # Business metrics & logic
+│       ├── Sales.js                # Sales analytics (fact table)
+│       ├── Marketing.js            # Marketing metrics (dimension)
 │       └── Customers.js            # Customer intelligence (dimension)
-└── render-3table-deployment.md     # Cloud deployment guide
+├── init/postgres/                  # Database initialization scripts
+├── powerbi-*.html                  # Power BI integration examples
+├── PowerBI-MCode-ReadyToCopy.txt   # M-Code snippets
+└── *.md                           # Documentation files
 ```
+
+> **🎯 Pure Backend**: No frontend included. Connect any frontend framework to the REST API.
 
 ## 🗄️ Database Setup
 
