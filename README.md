@@ -1,6 +1,6 @@
 # 🚀 Analytics Semantic Layer - Backend API
 
-A production-ready **backend semantic layer** built with **Cube.js** and **PostgreSQL** for secure business intelligence and Power BI integration. Provides clean business metrics without direct database access.
+A production-ready **backend semantic layer** built with **Cube.js** and **PostgreSQL** for secure business intelligence. Provides clean business metrics via REST API without direct database access.
 
 > **Note**: This is the backend API only. Frontend applications connect to this via REST API endpoints.
 
@@ -11,7 +11,7 @@ Frontend App ◄──► Cube.js API ◄──► PostgreSQL
 (Your App)       (Port 4000)      (Port 5432)
 ```
 
-**Features**: JWT Authentication | REST API | Automatic Table Joins | Business Metrics Only
+**Features**: JWT Authentication | REST API | Automatic Table Joins | Business Metrics
 
 ## 📊 Data Model (3 Joined Tables)
 
@@ -63,8 +63,6 @@ cube-analytics/
 │       ├── Marketing.js            # Marketing metrics (dimension)
 │       └── Customers.js            # Customer intelligence (dimension)
 ├── init/postgres/                  # Database initialization scripts
-├── powerbi-*.html                  # Power BI integration examples
-├── PowerBI-MCode-ReadyToCopy.txt   # M-Code snippets
 └── *.md                           # Documentation files
 ```
 
@@ -92,9 +90,9 @@ docker-compose up -d --force-recreate
 
 See: [`render-3table-deployment.md`](./render-3table-deployment.md) for detailed guide
 
-## 🔌 Power BI Integration
+## 🔌 API Endpoints
 
-### API Endpoints
+### Business Analytics Endpoints
 ```bash
 # Sales Analytics
 GET /cubejs-api/v1/load?query={"measures":["Sales.totalRevenue","Sales.count"]}
@@ -109,23 +107,18 @@ GET /cubejs-api/v1/load?query={"measures":["Customers.count","Customers.averageL
 GET /cubejs-api/v1/load?query={"measures":["Sales.totalRevenue","Marketing.totalBudget","Customers.count"],"dimensions":["Sales.region","Customers.customerSegment"]}
 ```
 
-### Power BI Setup
-1. **Get Data** → **Web**
-2. **URL**: Use endpoint above
-3. **Headers**: `Authorization` = `Bearer [your-jwt-token]`
-4. Navigate to `data → List` in Power BI Navigator
-
-### Clean M Code Example
-```m
-let
-    Source = Json.Document(Web.Contents("http://localhost:4000/cubejs-api/v1/load?query={\"measures\":[\"Sales.totalRevenue\"]}", [Headers=[Authorization="Bearer [token]"]])),
-    Data = Source[data],
-    ConvertedToTable = Table.FromRecords(Data)
-in
-    ConvertedToTable
+### Frontend Integration
+```javascript
+// Example API call from any frontend
+const response = await fetch('http://localhost:4000/cubejs-api/v1/load?query={"measures":["Sales.totalRevenue"]}', {
+  headers: {
+    'Authorization': 'Bearer YOUR_JWT_TOKEN'
+  }
+});
+const data = await response.json();
 ```
 
-## 📁 Project Structure
+## �️ Available Metrics
 
 ```
 my-cube-app/
@@ -179,11 +172,11 @@ docker-compose restart              # Restart services
 docker exec postgres-analytics psql -U postgres -d analyticsdb -c "SELECT COUNT(*) FROM sales;"
 ```
 
-**Power BI Issues**:
-- ✅ Use clean M code (avoid auto-generated)
-- ✅ Navigate to `data → List` in Navigator
+**API Issues**:
 - ✅ Verify JWT token in Authorization header
 - ✅ Check HTTPS endpoints in production
+- ✅ Use correct content-type headers
+- ✅ Handle CORS for web applications
 
 ## 🎯 Why This Architecture?
 
@@ -194,7 +187,7 @@ docker exec postgres-analytics psql -U postgres -d analyticsdb -c "SELECT COUNT(
 
 ### For Clients  
 - No database credentials needed
-- Self-service Power BI integration
+- Easy REST API integration
 - Business-friendly metrics only
 
 ### For IT/Security
@@ -207,11 +200,11 @@ docker exec postgres-analytics psql -U postgres -d analyticsdb -c "SELECT COUNT(
 1. ✅ Test locally with sample data
 2. ✅ Deploy to cloud (Render/AWS/Azure)
 3. ✅ Configure production database
-4. ✅ Set up client Power BI connections
+4. ✅ Set up client API connections
 5. ✅ Train users on available metrics
 
 ---
 
-**🎉 Ready for enterprise clients!** Secure, scalable, and Power BI-ready.
+**🎉 Ready for enterprise clients!** Secure, scalable, and API-ready.
 
 **Perfect for**: Enterprise analytics without database access | **Security**: ✅ **Performance**: ✅ **Scalability**: ✅
